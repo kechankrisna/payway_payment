@@ -19,7 +19,7 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
   String get encodedItem =>
       EncoderService.base46_encode(items.map((e) => e.toMap()).toList());
 
-  String get hash {
+  String getHash() {
     assert(PaywayTransactionService.instance != null);
     if (PaywayTransactionService.instance == null) {
       throw Exception(
@@ -57,7 +57,7 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
       "tran_id": tranId.toString(),
       "amount": amount.toString(),
       "items": encodedItem.toString(),
-      "hash": hash.toString(),
+      "hash": getHash().toString(),
       "firstname": firstname.toString(),
       "lastname": lastname.toString(),
       "phone": phone.toString(),

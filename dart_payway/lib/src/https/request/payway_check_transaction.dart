@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 
 extension PaywayCheckTransactionExt on PaywayCheckTransaction {
-  String get hash {
+  String getHash() {
     assert(PaywayTransactionService.instance != null);
     if (PaywayTransactionService.instance == null) {
       throw Exception(
@@ -40,7 +40,7 @@ extension PaywayCheckTransactionExt on PaywayCheckTransaction {
       "merchant_id": "${merchant!.merchantID}",
       "req_time": reqTime,
       "tran_id": tranId,
-      "hash": hash,
+      "hash": getHash(),
     };
     return map;
   }
