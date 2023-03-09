@@ -1,28 +1,27 @@
 // import 'package:flutter/services.dart';
 
-import 'package:aba_payment/enumeration.dart';
-import 'package:aba_payment/models/models.dart';
-import 'package:aba_payment/services/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:dart_payway/dart_payway.dart';
+import 'package:dart_payway/src/models/models.dart';
+import 'package:test/test.dart';
 import 'dart:io' as io;
+import 'package:dotenv/dotenv.dart' as dotenv;
 
 void main() {
   group("load env and test", () {
     setUpAll(() {
       io.HttpOverrides.global = null;
-
-      dotenv.testLoad(fileInput: io.File('.env').readAsStringSync());
+      dotenv.load();
+      final env = dotenv.env;
 
       PaywayTransactionService.ensureInitialized(ABAMerchant(
-        merchantID: dotenv.get('ABA_PAYWAY_MERCHANT_ID'),
-        merchantApiName: dotenv.get('ABA_PAYWAY_MERCHANT_NAME'),
-        merchantApiKey: dotenv.get('ABA_PAYWAY_API_KEY'),
-        baseApiUrl: dotenv.get('ABA_PAYWAY_API_URL'),
+        merchantID: env.get('ABA_PAYWAY_MERCHANT_ID'),
+        merchantApiName: env.get('ABA_PAYWAY_MERCHANT_NAME'),
+        merchantApiKey: env.get('ABA_PAYWAY_API_KEY'),
+        baseApiUrl: env.get('ABA_PAYWAY_API_URL'),
         refererDomain: "http://mylekha.app",
       ));
     });
-
+    
     test("create a transaction then check status pending", () async {
       final service = PaywayTransactionService.instance!;
       final tranID = service.uniqueTranID();
