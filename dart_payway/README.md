@@ -1,39 +1,53 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+### add pub
 
 ```dart
-const like = 'sample';
+dart pub add dart_payway
 ```
 
-## Additional information
+### example
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+```dart
+import 'package:dart_payway/dart_payway.dart';
+import 'package:dart_payway/src/models/aba_merchant.dart';
+
+void main() async {
+  PaywayTransactionService.ensureInitialized(ABAMerchant.fromMap({
+    "ABA_PAYWAY_MERCHANT_ID": "",
+    "ABA_PAYWAY_MERCHANT_NAME": "",
+    "ABA_PAYWAY_API_KEY": "",
+    "ABA_PAYWAY_API_URL": "",
+  }));
+
+  final service = PaywayTransactionService.instance!;
+  final tranID = service.uniqueTranID();
+
+  var _transaction = PaywayCreateTransaction(
+      amount: 6.00,
+      items: [
+        PaywayTransactionItem(name: "ទំនិញ 1", price: 1, quantity: 1),
+        PaywayTransactionItem(name: "ទំនិញ 2", price: 2, quantity: 1),
+        PaywayTransactionItem(name: "ទំនិញ 3", price: 3, quantity: 1),
+      ],
+      reqTime: service.uniqueReqTime(),
+      tranId: tranID,
+      email: 'support@mylekha.app',
+      firstname: 'Miss',
+      lastname: 'My Lekha',
+      phone: '010464144',
+      option: ABAPaymentOption.abapay_deeplink,
+      shipping: 0.0,
+      returnUrl: "https://stage.mylekha.app");
+
+  /// create transaction
+  var createResponse =
+      await service.createTransaction(transaction: _transaction);
+
+  ///gernate checkout payway uri
+  String checkoutApiUrl =
+      "http://localhost/api/v1/integrate/payway/checkout_page";
+  var webURI = await service.generateTransactionCheckoutURI(
+      transaction: _transaction, checkoutApiUrl: checkoutApiUrl);
+}
+
+
+```
