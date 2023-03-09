@@ -1,3 +1,3 @@
-## 1.0.0
+## 0.0.1
 
-- Initial version.
+- Initial version. with fully function with payway v2
