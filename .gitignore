@@ -1,1 +1,7 @@
 *.env
+*/flutter_example/android
+*/flutter_example/ios
+*/flutter_example/windows
+*/flutter_example/macos
+*/flutter_example/linux
+*/flutter_example/web
