@@ -1,6 +1,6 @@
 name: dart_payway
 description: This package will allow you to integrate your app with ABA PayWay with dart native/ or flutter
-version: 0.0.1+1
+version: 0.0.1+2
 homepage: https://github.com/kechankrisna/payway_payment
 
 environment:
