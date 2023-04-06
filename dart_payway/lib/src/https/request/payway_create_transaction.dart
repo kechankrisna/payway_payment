@@ -1,20 +1,24 @@
 import 'package:collection/collection.dart';
 import 'package:dart_payway/dart_payway.dart';
-import 'package:dart_payway/src/services/aba_client_service.dart';
-import 'package:dart_payway/src/services/encoder_service.dart';
-import 'package:dart_payway/src/services/payway_transaction_service.dart';
 import 'package:intl/intl.dart';
-
-import 'payway_transacition_item.dart';
 
 extension PaywayCreateTransactionExt on PaywayCreateTransaction {
   double get totalPrice {
     double result = 0;
-    this.items.fold(result, (dynamic pre, e) => result += e.price * e.quantity);
+    items.fold(result, (dynamic pre, e) => result += e.price * e.quantity);
     return result;
   }
 
-  String get encodedReturnUrl => EncoderService.base46_encode(returnUrl);
+  String get encodedContinueSuccessUrl => continueSuccessUrl == null
+      ? ""
+      : EncoderService.base46_encode(continueSuccessUrl.toString());
+  String get encodedReturnUrl => returnUrl == null
+      ? ""
+      : EncoderService.base46_encode(returnUrl.toString());
+  String get encodedReturnParams =>
+      returnParams != null || returnParams?.isNotEmpty == true
+          ? EncoderService.base46_encode(returnParams)
+          : "";
 
   String get encodedItem =>
       EncoderService.base46_encode(items.map((e) => e.toMap()).toList());
@@ -38,9 +42,11 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
       email: email.toString(),
       phone: phone.toString(),
       type: type.name.toString(),
-      paymentOption: option.name.toString(),
-      currency: currency.name.toString(),
-      returnUrl: encodedReturnUrl.toString(),
+      paymentOption: option.name,
+      currency: currency.name,
+      returnUrl: encodedReturnUrl,
+      returnParams: encodedReturnParams,
+      continueSuccessUrl: encodedContinueSuccessUrl,
     );
   }
 
@@ -60,11 +66,11 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
       "hash": getHash().toString(),
       "firstname": firstname.toString(),
       "lastname": lastname.toString(),
-      "phone": phone.toString(),
-      "email": email.toString(),
-      "return_url": encodedReturnUrl.toString(),
-      "continue_success_url": continueSuccessUrl ?? "",
-      "return_params": returnParams ?? "",
+      "phone": phone,
+      "email": email,
+      "return_url": encodedReturnUrl,
+      "continue_success_url": encodedContinueSuccessUrl,
+      "return_params": encodedReturnParams,
       "shipping": shipping.toString(),
       "type": type.name,
       "payment_option": option.name,
@@ -83,9 +89,9 @@ class PaywayCreateTransaction {
   final String lastname;
   final String phone;
   final String email;
-  final String? returnUrl;
-  final String? continueSuccessUrl;
-  final String? returnParams;
+  final Uri? returnUrl;
+  final Uri? continueSuccessUrl;
+  final Map<String, dynamic>? returnParams;
   final double? shipping;
   ABAPaymentOption option;
   ABATransactionType type;
@@ -156,9 +162,12 @@ class PaywayCreateTransaction {
       lastname: map['lastname'] ?? '',
       phone: map['phone'] ?? '',
       email: map['email'] ?? '',
-      returnUrl: map['return_url'],
-      continueSuccessUrl: map['continue_success_url'] ?? '',
-      returnParams: map['return_params'],
+      returnUrl:
+          map['return_url'] == null ? null : Uri.tryParse(map['return_url']),
+      continueSuccessUrl: map['continue_success_url'] == null
+          ? null
+          : Uri.tryParse(map['continue_success_url']),
+      returnParams: map['return_params'] as Map<String, dynamic>?,
       shipping: map['shipping']?.toDouble(),
       option:
           $ABAPaymentOptionMap[map["payment_option"]] ?? ABAPaymentOption.cards,
@@ -177,9 +186,9 @@ class PaywayCreateTransaction {
     String? lastname,
     String? phone,
     String? email,
-    String? returnUrl,
-    String? continueSuccessUrl,
-    String? returnParams,
+    Uri? returnUrl,
+    Uri? continueSuccessUrl,
+    Map<String, dynamic>? returnParams,
     double? shipping,
     ABAPaymentOption? option,
     ABATransactionType? type,
@@ -232,22 +241,22 @@ class PaywayCreateTransaction {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     final listEquals = const DeepCollectionEquality().equals;
-  
+
     return other is PaywayCreateTransaction &&
-      other.tranId == tranId &&
-      other.reqTime == reqTime &&
-      other.amount == amount &&
-      listEquals(other.items, items) &&
-      other.firstname == firstname &&
-      other.lastname == lastname &&
-      other.phone == phone &&
-      other.email == email &&
-      other.returnUrl == returnUrl &&
-      other.continueSuccessUrl == continueSuccessUrl &&
-      other.returnParams == returnParams &&
-      other.shipping == shipping &&
-      other.option == option &&
-      other.type == type &&
-      other.currency == currency;
+        other.tranId == tranId &&
+        other.reqTime == reqTime &&
+        other.amount == amount &&
+        listEquals(other.items, items) &&
+        other.firstname == firstname &&
+        other.lastname == lastname &&
+        other.phone == phone &&
+        other.email == email &&
+        other.returnUrl == returnUrl &&
+        other.continueSuccessUrl == continueSuccessUrl &&
+        other.returnParams == returnParams &&
+        other.shipping == shipping &&
+        other.option == option &&
+        other.type == type &&
+        other.currency == currency;
   }
 }

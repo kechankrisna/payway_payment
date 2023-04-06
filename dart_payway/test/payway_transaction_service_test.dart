@@ -21,7 +21,7 @@ void main() {
         refererDomain: "http://mylekha.app",
       ));
     });
-    
+
     test("create a transaction then check status pending", () async {
       final service = PaywayTransactionService.instance!;
       final tranID = service.uniqueTranID();
@@ -41,7 +41,7 @@ void main() {
           phone: '010464144',
           option: ABAPaymentOption.abapay_deeplink,
           shipping: 0.0,
-          returnUrl: "https://stage.mylekha.app");
+          returnUrl: Uri.tryParse("https://stage.mylekha.app"));
 
       var createResponse =
           await service.createTransaction(transaction: _transaction);
@@ -79,7 +79,7 @@ void main() {
           phone: '010464144',
           option: ABAPaymentOption.abapay_deeplink,
           shipping: 0.0,
-          returnUrl: "https://stage.mylekha.app");
+          returnUrl: Uri.tryParse("https://stage.mylekha.app"));
       String checkoutApiUrl =
           "http://localhost/api/v1/integrate/payway/checkout_page";
       var webURI = await service.generateTransactionCheckoutURI(

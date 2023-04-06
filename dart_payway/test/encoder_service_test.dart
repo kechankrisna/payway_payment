@@ -35,4 +35,11 @@ void main() {
 
     expect(input, decoded);
   });
+
+  test("EncoderService uri", () {
+    final uri = Uri.tryParse("https://stage.mylekha.app");
+    var encoded = EncoderService.base46_encode(uri.toString());
+    var decoded = EncoderService.base46_decode(encoded);
+    expect(uri, Uri.tryParse(decoded.toString()));
+  });
 }

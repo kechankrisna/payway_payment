@@ -27,7 +27,7 @@ void main() async {
       phone: '010464144',
       option: ABAPaymentOption.abapay_deeplink,
       shipping: 0.0,
-      returnUrl: "https://stage.mylekha.app");
+      returnUrl: Uri.tryParse("https://stage.mylekha.app"));
 
   /// create transaction
   var createResponse =
