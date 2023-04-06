@@ -20,7 +20,22 @@ class EncoderService {
     final value = utf8.decode(stringChars.codeUnits);
     return json.decode(value);
   }
+
+  static String base46_encode_uri(Uri? v) {
+    if (v == null) return "";
+    String value = v.toString();
+    Codec<String, String> stringToBase64Url = utf8.fuse(base64Url);
+    return stringToBase64Url.encode(value);
+  }
+
+  static Uri? base46_decode_uri(String? v) {
+    if (v == null || v.isEmpty) return null;
+    Codec<String, String> stringToBase64Url = utf8.fuse(base64Url);
+    return Uri.tryParse(stringToBase64Url.decode(v));
+  }
 }
+
+
 
 /// object -> codeUnits -> stringChars -> bytes -> base64Encode
 /// base64Decode -> bytes -> stringChars -> codeUnits -> object

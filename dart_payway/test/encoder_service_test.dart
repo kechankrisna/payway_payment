@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dart_payway/dart_payway.dart';
 import 'package:test/test.dart';
 
@@ -40,6 +42,9 @@ void main() {
     final uri = Uri.tryParse("https://stage.mylekha.app");
     var encoded = EncoderService.base46_encode(uri.toString());
     var decoded = EncoderService.base46_decode(encoded);
+    var uri_encoded = EncoderService.base46_encode_uri(uri);
+    var uri_decoded = EncoderService.base46_decode_uri(uri_encoded);
+    expect(uri, uri_decoded);
     expect(uri, Uri.tryParse(decoded.toString()));
   });
 }
