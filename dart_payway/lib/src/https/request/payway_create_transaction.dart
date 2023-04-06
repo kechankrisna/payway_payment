@@ -9,14 +9,11 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
     return result;
   }
 
-  String get encodedContinueSuccessUrl => continueSuccessUrl == null
-      ? ""
-      : EncoderService.base46_encode(continueSuccessUrl.toString());
-  String get encodedReturnUrl => returnUrl == null
-      ? ""
-      : EncoderService.base46_encode(returnUrl.toString());
+  String get encodedContinueSuccessUrl =>
+      EncoderService.base46_encode_uri(continueSuccessUrl);
+  String get encodedReturnUrl => EncoderService.base46_encode_uri(returnUrl);
   String get encodedReturnParams =>
-      returnParams != null || returnParams?.isNotEmpty == true
+      returnParams != null &&  returnParams!.entries.isNotEmpty == true
           ? EncoderService.base46_encode(returnParams)
           : "";
 
