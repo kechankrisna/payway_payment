@@ -13,7 +13,7 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
       EncoderService.base46_encode_uri(continueSuccessUrl);
   String get encodedReturnUrl => EncoderService.base46_encode_uri(returnUrl);
   String get encodedReturnParams =>
-      returnParams != null &&  returnParams!.entries.isNotEmpty == true
+      returnParams != null && returnParams!.entries.isNotEmpty == true
           ? EncoderService.base46_encode(returnParams)
           : "";
 
@@ -65,14 +65,25 @@ extension PaywayCreateTransactionExt on PaywayCreateTransaction {
       "lastname": lastname.toString(),
       "phone": phone,
       "email": email,
-      "return_url": encodedReturnUrl,
-      "continue_success_url": encodedContinueSuccessUrl,
-      "return_params": encodedReturnParams,
+
+      /// "return_url": encodedReturnUrl,
+      /// "continue_success_url": encodedContinueSuccessUrl,
+      /// "return_params": encodedReturnParams,
       "shipping": shipping.toString(),
       "type": type.name,
       "payment_option": option.name,
       "currency": currency.name,
     };
+    if (returnUrl != null) {
+      map['return_url'] = encodedReturnUrl;
+    }
+    if (continueSuccessUrl != null) {
+      map['continue_success_url'] = encodedContinueSuccessUrl;
+    }
+    if (returnParams != null) {
+      map['return_params'] = encodedReturnParams;
+    }
+
     return map;
   }
 }
